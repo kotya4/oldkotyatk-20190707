@@ -11,7 +11,7 @@ import re
 import traceback
 
 PORT = 5000
-HTTP_PATH = os.path.dirname(sys.argv[0]) + '/www'
+HTTP_PATH = 'www'
 
 class IndexHandler(RequestHandler):
     def get(self):
