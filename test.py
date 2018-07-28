@@ -11,6 +11,7 @@ import re
 import traceback
 
 HTTP_PATH = 'www'
+PORT = 5000
 
 class IndexHandler(RequestHandler):
     def get(self):
@@ -23,8 +24,9 @@ class IndexHandler(RequestHandler):
 
 
 def main():
+
+    port = int(os.environ.get("PORT", PORT))
     
-    port = int(os.environ.get("PORT", 5000))
     print('Server runs on port %s' % port)
 
     app = Application([
