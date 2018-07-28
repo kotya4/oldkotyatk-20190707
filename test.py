@@ -10,7 +10,6 @@ import os
 import re
 import traceback
 
-PORT = 5000
 HTTP_PATH = 'www'
 
 class IndexHandler(RequestHandler):
@@ -24,7 +23,9 @@ class IndexHandler(RequestHandler):
 
 
 def main():
-    print('Server runs on port %s' % PORT)
+    
+    port = int(os.environ.get("PORT", 5000))
+    print('Server runs on port %s' % port)
 
     app = Application([
         (r'/', IndexHandler),
@@ -33,7 +34,7 @@ def main():
         autoreload=True
     )
 
-    app.listen(PORT)
+    app.listen(port)
     
     try:
         IOLoop.instance().start()  
