@@ -25,6 +25,9 @@ class IndexHandler(RequestHandler):
 
 
 class WSHandler(WebSocketHandler):
+    def check_origin(self, origin):
+        return True
+
     def open(self, *args):
         self.stream.set_nodelay(True)
         ip = self.request.remote_ip
