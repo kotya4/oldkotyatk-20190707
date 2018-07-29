@@ -30,7 +30,7 @@
   <script>
     let ws = null;
     document.getElementById('open').onclick = function() {
-      ws = new WebSocket(`ws://localhost:${PORT}/ws?id=12&hash=34`);
+      ws = new WebSocket(`ws://localhost/ws?id=12&hash=34`);
       ws.onmessage = function (e) {
         console.log(e);
       }
