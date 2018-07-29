@@ -14,5 +14,36 @@
   </head>
   <body>
     Hello Sluchaynaya Kotya! 🐱
+    <button id="open">open</button>
+    <button id="send">send</button>
+    <button id="close">close</button>
+    <br>
+    <input type="text" id="textbox" value="my message" />
   </body>
+
+  <!-- parameters -->
+  <script>
+    const PORT = {{PORT}};
+  </script>
+
+  <!-- main sript -->
+  <script>
+    let ws = null;
+    document.getElementById('open').onclick = function() {
+      ws = new WebSocket(`ws://localhost:${PORT}/ws?id=12&hash=34`);
+      ws.onmessage = function (e) {
+        console.log(e);
+      }
+    }
+    document.getElementById('send').onclick = function() {
+      const v = document.getElementById('textbox').value;
+      document.getElementById('textbox').value = "";
+      ws.send(v);
+
+    }
+    document.getElementById('close').onclick = function() {
+      ws.close();
+    }
+
+  </script>
 </html>
