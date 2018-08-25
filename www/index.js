@@ -43,8 +43,8 @@ function run_logo_cat(r) {
     for (let i in o) {
       const c = o[o.length - 1 - i];
       switch (c) {
-      case '\\': s += '//'; break;
-      case '//': s += '\\'; break;
+      case '\\': s += '\/'; break;
+      case '\/': s += '\\'; break;
       default: s += c;
       }
     }
