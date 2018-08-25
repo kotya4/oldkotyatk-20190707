@@ -43,8 +43,8 @@ function run_logo_cat(r) {
     for (let i in o) {
       const c = o[o.length - 1 - i];
       switch (c) {
-      case '\\': s += '/'; break;
-      case '/': s += '\\'; break;
+      case '\\': s += '//'; break;
+      case '//': s += '\\'; break;
       default: s += c;
       }
     }
@@ -83,7 +83,7 @@ function run_logo_cat(r) {
 
   iid = setInterval(function() {
     let body_str = '';
-    if (body_s >= 31) {
+    if (body_s >= 30) {
       logo_info.style.display = 'block';
       if (pos !== spos) {
         ++pos;
