@@ -28,7 +28,7 @@ function run_logo_cat(r) {
     .split('\n')
     .map(e => e
       .slice(1, -1)
-      .slice(1, 30) + ' '
+      .slice(1, 31) + ' '
         .repeat(e.length < 32 ? 32 - e.length : 0));
   
   let k = 1;
