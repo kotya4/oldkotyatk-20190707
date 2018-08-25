@@ -28,7 +28,7 @@ function run_logo_cat(r) {
     .split('\n')
     .map(e => e
       .slice(1, -1)
-      .slice(1, 31) + ' '
+      .slice(1, 30) + ' '
         .repeat(e.length < 32 ? 32 - e.length : 0));
   
   let k = 1;
@@ -83,7 +83,7 @@ function run_logo_cat(r) {
 
   iid = setInterval(function() {
     let body_str = '';
-    if (body_s >= 30) {
+    if (body_s >= 31) {
       logo_info.style.display = 'block';
       if (pos !== spos) {
         ++pos;
