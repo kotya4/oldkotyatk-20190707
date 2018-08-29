@@ -24,15 +24,16 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 
 
 def main():
+"""
     bot = Bot(token='646357441:AAGOwonTs3T9fZfN8KxCE22FMxtA-bWYhPI')
     dp = Dispatcher(bot)
     @dp.message_handler(commands=['start', 'help'])
     async def send_welcome(message: types.Message):
         await message.reply("Hi!\nI'm EchoBot!\nPowered by aiogram.")
     executor.start_polling(dp)
-
+"""
     port = int(os.environ.get("PORT", 8081))
-    server_address = ('127.0.0.1', port)
+    server_address = ('', port)
     httpd = HTTPServer(server_address, testHTTPServer_RequestHandler)
     print('RUNNING SERVER ON PORT', port)
     httpd.serve_forever()
