@@ -2,9 +2,6 @@ from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 
-print('hello, kotya')
-
-"""
 bot = Bot(token='646357441:AAGOwonTs3T9fZfN8KxCE22FMxtA-bWYhPI')
 dp = Dispatcher(bot)
 
@@ -14,4 +11,4 @@ async def send_welcome(message: types.Message):
 
 if __name__ == '__main__':
     executor.start_polling(dp)
-"""
+    
