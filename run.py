@@ -1,44 +1,45 @@
-#!/usr/bin/env python
- 
-from http.server import BaseHTTPRequestHandler, HTTPServer
+#!/usr/bin/python3
+from tornado.web import RequestHandler, Application, StaticFileHandler
+from tornado.websocket import WebSocketHandler
+from tornado.ioloop import IOLoop, PeriodicCallback
+from random import randint
+import json
+import time
+import sys
 import os
+import re
+import traceback
 
-from aiogram import Bot, types
-from aiogram.dispatcher import Dispatcher
-from aiogram.utils import executor
+HTTP_PATH = 'www'
 
-# HTTPRequestHandler class
-class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
-    # GET
-    def do_GET(self):
-        # Send response status code
-        self.send_response(200)
-        # Send headers
-        self.send_header('Content-type','text/html')
-        self.end_headers()
-        # Send message back to client
-        message = "Hello world!"
-        # Write content as utf-8 data
-        self.wfile.write(bytes(message, "utf8"))
-        return
+class IndexHandler(RequestHandler):
+    def get(self):
+        #self.render(HTTP_PATH + '/index.html');
+        f = open(HTTP_PATH + '/index.html', mode='rb')
+        self.write(f.read())
+        f.close()
+
+    def post(self):
+        print('Client with ip <%s> sent <%s>' % (self.request.remote_ip, self.request.body))
 
 
 def main():
-    """
-    bot = Bot(token='646357441:AAGOwonTs3T9fZfN8KxCE22FMxtA-bWYhPI')
-    dp = Dispatcher(bot)
-    @dp.message_handler(commands=['start', 'help'])
-    async def send_welcome(message: types.Message):
-        await message.reply("Hi!\nI'm EchoBot!\nPowered by aiogram.")
-    executor.start_polling(dp)
-    """
-    port = int(os.environ.get("PORT", 8081))
-    server_address = ('', port)
-    httpd = HTTPServer(server_address, testHTTPServer_RequestHandler)
-    print('RUNNING SERVER ON PORT', port)
-    httpd.serve_forever()
-    print('hello')
- 
+    port = int(os.environ.get("PORT", 5000))
+    print('Server runs on port %s' % port)
+    app = Application([
+        (r'/', IndexHandler),
+        (r'/(.*)', StaticFileHandler, {"path": HTTP_PATH}),
+    ],
+        autoreload=True
+    )
+    app.listen(port)
+    try:
+        IOLoop.instance().start()  
+    except KeyboardInterrupt:
+        pass
+    IOLoop.instance().stop()
+    print('Server shutted down')
+    time.sleep(1)
 
 if '__main__' == __name__:
     main()
