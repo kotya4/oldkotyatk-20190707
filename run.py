@@ -4,7 +4,7 @@ from tornado.ioloop import IOLoop, PeriodicCallback
 import time, sys, os
 
 # constants
-HTTP_PATH = os.path.dirname(sys.argv[0]) + '/www'
+HTTP_PATH = 'www'
 PDELAY = 1000
 
 # handles index.html from 'www'
