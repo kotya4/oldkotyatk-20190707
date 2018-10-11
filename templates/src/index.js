@@ -1,6 +1,6 @@
 window.onload = function() {
 
-  setTimeout(()=>load_external_file('cat-ascii.txt', r=>run_logo_cat(r)),3000);
+  setTimeout(()=>load_external_file('data/cat-ascii.txt', r=>run_logo_cat(r)),3000);
 
   const ctx = document.getElementById('canvas').getContext('2d');
   ctx.canvas.width = 300;

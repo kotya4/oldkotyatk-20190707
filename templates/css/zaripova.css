@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono");
+    
+body {
+  margin: 0;
+  color: #555555;
+  font-size: 18px;
+  background-color: #5e646d;
+  #background-image: url("../img/zaripova-bg.png")
+}
+
+h1 {
+  text-align: left;
+}
+
+img {
+  width: 440px;
+  height: 100px;
+  margin: 0px 20px 0px 0px;
+  float: left;
+}
+
+.textarea {
+  text-align: right;
+  margin: 10px 0px 0px 0px;
+  width: 100px;
+}
+
+.content {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  padding: 0px 30px;
+}
+
+.header {
+  top: 0;
+  height: 120px;
+  width: 640px;
+  background-color: #efefef;
+  font-size: 10px;
+  font-family: "Roboto Mono";
+}
+
+.text {
+  top: 120px;
+  background-color: #fefefe;
+  width: 640px;
+  text-align: justify;
+}

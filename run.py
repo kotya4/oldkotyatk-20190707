@@ -2,19 +2,32 @@
 from tornado.web import RequestHandler, Application, StaticFileHandler
 from tornado.ioloop import IOLoop, PeriodicCallback
 import time, sys, os
+import zaripova
 
-# constants
-HTTP_PATH = 'www'
-PDELAY = 1000
 
-# handles index.html from 'www'
-class IndexHandler(RequestHandler):
+zaripova.init()
+
+
+class ZaripovaHandler(RequestHandler):
+    """ Handles zaripova.html """
+
     def get(self):
-        f = open(HTTP_PATH + '/index.html', mode='rb')
-        self.write(f.read())
-        f.close()
-    def post(self):
-        print('Client with ip <%s> sent <%s>' % (self.request.remote_ip, self.request.body))
+        text = { 'header': '', 'body': '' }
+        page = self.get_argument('page', None)
+        try:
+            page = int(page)
+            text = zaripova.gen(page + 4)
+        except (ValueError, TypeError) as e:
+            page = 'intro'
+        self.render('templates/zaripova.html', header=text['header'], body=text['body'], page=page)
+
+
+class IndexHandler(RequestHandler):
+    """ Handles index.html """
+    
+    def get(self):
+        self.render('templates/index.html')
+
 
 # activates newrelic if exists
 try:
@@ -26,9 +39,10 @@ try:
 except ImportError:
     pass
 
+
 # executes every second
 def periodic_func():
-    print('A')
+    #print('A')
     #tbot.run()
     pass
 
@@ -39,13 +53,14 @@ def main():
     print('Server runs on port %s' % port)
     app = Application([
         (r'/', IndexHandler),
-        (r'/(.*)', StaticFileHandler, {'path': HTTP_PATH}),
+        (r'/zaripova', ZaripovaHandler),
+        (r'/(.*)', StaticFileHandler, {'path': 'templates'}),
     ],
         autoreload=True
     )
     app.listen(port)
-    # starts periodic callack with delay
-    callback = PeriodicCallback(periodic_func, PDELAY)
+    # starts periodic callack with 1000ms delay
+    callback = PeriodicCallback(periodic_func, 1000)
     try:
         callback.start()
         IOLoop.instance().start()  
