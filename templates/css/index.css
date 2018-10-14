@@ -42,6 +42,12 @@ a {
   background-color: inherit;
 }
 
+.logo-small-text {
+  display: none;
+  top: 30px;
+  left: 13px;
+}
+
 .logo-cat {
   z-index: -1;
   position: absolute;
@@ -103,4 +109,11 @@ a {
   .main {
     width: 100%;
   }
+  .logo-text {
+    display: none;
+  }
+  .logo-small-text {
+    display: block; 
+  }
+
 }

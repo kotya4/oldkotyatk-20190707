@@ -8,6 +8,11 @@ body {
   #background-image: url("../img/zaripova-bg.png")
 }
 
+a {
+  color: hotpink;
+  text-decoration: none;
+}
+
 h1 {
   text-align: left;
 }
