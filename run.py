@@ -8,9 +8,16 @@ import zaripova
 zaripova.init()
 
 
+class Tetracube(RequestHandler):
+    """ Handles tetra.html """
+    
+    def get(self):
+        self.render('templates/tetra.html')
+
+
 class ZaripovaHandler(RequestHandler):
     """ Handles zaripova.html """
-
+    
     def get(self):
         text = { 'header': '', 'body': '' }
         page = self.get_argument('page', None)
@@ -54,6 +61,7 @@ def main():
     app = Application([
         (r'/', IndexHandler),
         (r'/zaripova', ZaripovaHandler),
+        (r'/tetra', Tetracube),
         (r'/(.*)', StaticFileHandler, {'path': 'templates'}),
     ],
         autoreload=True
