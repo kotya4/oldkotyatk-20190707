@@ -1,210 +1,13 @@
 
-
-
-function Platform(_x1, _x2, h, args = {}) {
-  function arg(key, def) {
-    if (key in args) return args[key];
-    else if (undefined !== def) return def;
-    throw(`Argument has no default value for key '${key}'.`);
-  }
-
-  const x1 = _x1 < _x2 ? _x1 : _x2;
-  const x2 = _x1 < _x2 ? _x2 : _x1;
-  const transparent = arg('transparent', false);
-  const ceiling = arg('ceiling', false);
-
-  const colors = [ '#800000', '#008000', '#808000', '#000080', '#800080', '#008080', '#c0c0c0', ];
-
-  function is_near_by(x, y, size) {
-    if (x > x1 - size && x < x2)
-      if (y > h && y - size < h)
-        return true;
-    return false;
-  }
-
-  function is_near_by_ceiling(x, y, size, from_what_side) {
-    if (ceiling && x > x1 - size && x < x2) {
-      if (from_what_side < 0 && y > h && y - size < h) // from down
-        return true;
-    }
-    return false;
-  }
-
-  function draw(ctx) {
-    if (transparent) return;
-    ctx.strokeStyle = 'white';//colors[Math.random() * colors.length | 0];
-    ctx.beginPath();
-    ctx.moveTo(x1, h);
-    ctx.lineTo(x2, h);
-    ctx.stroke();
-  }
-
-  this.is_near_by_ceiling = is_near_by_ceiling;
-  this.is_near_by = is_near_by;
-  this.draw = draw;
-  this.height = h;
-}
-
-
-function Wall(w, _y1, _y2, args = {}) {
-  function arg(key, def) {
-    if (key in args) return args[key];
-    else if (undefined !== def) return def;
-    throw(`Argument has no default value for key '${key}'.`);
-  }
-
-  const y1 = _y1 < _y2 ? _y1 : _y2;
-  const y2 = _y1 < _y2 ? _y2 : _y1;
-  const transparent = arg('transparent', false);
-
-  const colors = [ '#800000', '#008000', '#808000', '#000080', '#800080', '#008080', '#c0c0c0', ];
-
-  function is_near_by(x, y, size, from_what_side) {
-    if (y >= y1 && y <= y2) {
-      if (x < w && x + size > w)
-          return true;
-
-      if (from_what_side > 0) { // from left
-        if (x < w && x + size + size / 2 > w)
-          return true;
-      } else { // from right
-        if (x - size / 2 < w && x + size > w)
-          return true;
-      }
-    }
-    return false;
-  }
-
-  function draw(ctx) {
-    if (transparent) return;
-    ctx.strokeStyle = colors[Math.random() * colors.length | 0];
-    ctx.beginPath();
-    ctx.moveTo(w, y1);
-    ctx.lineTo(w, y2);
-    ctx.stroke();
-  }
-
-  this.is_near_by = is_near_by;
-  this.width = w;
-  this.draw = draw;
-}
-
-
-function Pixel(args) {
-  function arg(key, def) {
-    if (key in args) return args[key];
-    else if (undefined !== def) return def;
-    throw(`Argument has no default value for key '${key}'.`);
-  }
-
-  const colors = arg('colors', [ '#800000', '#008000', '#808000', '#000080', '#800080', '#008080', '#c0c0c0', ]);
-  const size = 9;
-  const pos = arg('pos');                     // position
-  const spd = { x: 0, y: 0 };                 // speed
-  const acc = { x: 0.03, y: 0.01 };           // acceleration (const)
-  const inh = { x: 0.015, y: 0.008 };         // inhibition (const)
-  const max_spd = { x: 0.15, y: 0.5 };         // max speed (const)
-  const jump_strength = 0.17;
-  const platforms = arg('platforms');
-  const walls = arg('walls');
-  let falling = false;
-  let accelerating = false;
-  let jumping = false;
-  let acc_echo = 0; // last non-zero spd.x value (in porc. walls)
-
-  function proc_gravity() {
-    if (spd.y < 0) return; // no need to proc gravity if entity jumps up
-    const on_platform = platforms.find(e => e.is_near_by(pos.x, pos.y, size));
-    if (on_platform) {
-      if (falling) {
-        jumping = false;
-        falling = false;
-        spd.y = 0;
-        pos.y = on_platform.height;
-      }
-    } else {
-      falling = true;
-      if (spd.y < max_spd.y) spd.y += acc.y;
-    }
-  }
-
-  function proc_moving(e) {
-    if (!accelerating && spd.x !== 0) {
-      if (spd.x > 0) spd.x -= inh.x;
-      else if (spd.x < 0) spd.x += inh.x;
-      if (Math.abs(spd.x) <= inh.x) {
-        spd.x = 0;
-        //pos.x |= 0; // for better drawing
-      }
-    }
-    if (spd.y < 0) {
-      spd.y += inh.y;
-    }
-    accelerating = false;
-    pos.x += spd.x * e;
-    pos.y += spd.y * e;
-    const wall = walls.find(e => e.is_near_by(pos.x, pos.y, size, acc_echo));
-    if (wall) {
-      pos.x = acc_echo > 0 ? wall.width - size - 1 : wall.width + 1;
-      spd.x = 0;
-    }
-    const ceiling = platforms.find(e => e.is_near_by_ceiling(pos.x, pos.y, size, spd.y));
-    if (ceiling) {
-      pos.y = ceiling.height + size;
-      spd.y = 0;
-    }
-  }
-
-  function proc(e) {
-    proc_gravity();
-    proc_moving(e);
-  }
-
-  function accelerate(x) {
-    accelerating = true;
-    if (x > 0 && spd.x < max_spd.x) {
-      spd.x += acc.x;
-    } else if (x < 0 && spd.x > -max_spd.x) {
-      spd.x -= acc.x;
-    }
-    acc_echo = spd.x;
-  }
-
-  function jump() {
-    if (!jumping) {
-      jumping = true;
-      spd.y = -jump_strength;
-    }
-  }
-
-  function draw(ctx) {
-    ctx.fillStyle = colors[Math.random() * colors.length | 0];
-    ctx.fillRect(pos.x | 0, pos.y | 0, size, -size);
-  }
-
-  this.draw = draw;
-  this.proc = proc;
-  this.accelerate = accelerate;
-  this.jump = jump;
-}
-
-
-
-
-function PixelPattern(args) {
-
-
-}
-
-
-
-
-
 (function() {
   //console.log('\n'.charCodeAt(0));
   function onload() {
-    const cvs = document.getElementsByClassName('canvas')[0];
+    const cvs = document.getElementsByClassName('canvas')[1];
     const ctx = cvs.getContext('2d');
+
+    const cvs_slow = document.getElementsByClassName('canvas')[0];
+    const ctx_slow = cvs_slow.getContext('2d');
+
     const kb = { };
 
     {
@@ -217,8 +20,13 @@ function PixelPattern(args) {
       cvs.style.height = `${height}px`;
       cvs.width = (width * scale) | 0;
       cvs.height = (cvs.width * ratio) | 0;
-
       ctx.imageSmoothingEnabled = false;
+
+      cvs_slow.style.width = cvs.style.width;
+      cvs_slow.style.height = cvs.style.height;
+      cvs_slow.width = cvs.width;
+      cvs_slow.height = cvs.height;
+      ctx_slow.imageSmoothingEnabled = false;
     }
 
     {
@@ -244,39 +52,39 @@ function PixelPattern(args) {
 
     {
       const platforms = [
-        new Platform(0, cvs.width, 0, { transparent: true, ceiling: true }),
-        new Platform(0, cvs.width, cvs.height, { transparent: true }),
+        new px.Platform(0, cvs.width, 0, { transparent: true, ceiling: true }),
+        new px.Platform(0, cvs.width, cvs.height, { transparent: true }),
 
-        new Platform(0, cvs.width, cvs.height - 10),
+        new px.Platform(0, cvs.width, cvs.height - 10),
 
         // chamber for crazy
-        //new Platform(200, 250, 30, { ceiling: true }),
-        //new Platform(200, 250, 50, { ceiling: true }),
+        new px.Platform(200, 250, 30, { ceiling: true }),
+        new px.Platform(200, 250, 50, { ceiling: true }),
 
       ];
 
       const walls = [
-        new Wall(0, 0, cvs.height, { transparent: true }),
-        new Wall(cvs.width, 0, cvs.height, { transparent: true }),
+        new px.Wall(0, 0, cvs.height, { transparent: true }),
+        new px.Wall(cvs.width, 0, cvs.height, { transparent: true }),
         
 
         // chamber for crazy
-        //new Wall(200, 30, 50),
-        //new Wall(250, 30, 50),
+        new px.Wall(200, 30, 50),
+        new px.Wall(250, 30, 50),
 
 
       ];
 
-      const pixel = new Pixel({
-        pos: { x: 220, y: 80 },
+      const pixel = new px.Creature({
+        position: { x: 220, y: 80 },
         platforms: platforms,
         walls: walls,
-        colors: [ 'red' ],
+        color: 'red',
       });
 
 
-      const crazy = new Pixel({
-        pos: { x: 220, y: 40 },
+      const crazy = new px.Creature({
+        position: { x: 220, y: 40 },
         platforms: platforms,
         walls: walls,
       });
@@ -305,66 +113,113 @@ function PixelPattern(args) {
         points_count: 10,
       });
 
-      let fps = 0;
-      let elapsed = 0;
-      let old_time = Date.now();
-      setInterval(() => { fps = 1000 / elapsed | 0; }, 500);
-      (function render() {
-        const new_time = Date.now();
-        elapsed = new_time - old_time;
-        old_time = new_time;
+
+      const golem_city = new px.GolemCity({
+        boundaries: [cvs.width, cvs.height],
+        center: [cvs.width * 2 / 3, cvs.height - 10],
+      });
 
 
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, cvs.width, cvs.height);
-
-        //builds.forEach(e => e.draw(ctx));
-
-        /*
-        towns.forEach((e) => {
-          e.proc(elapsed);
-          e.draw(ctx);
-        });
-        */
-
-
-        //platforms.forEach(e => e.draw(ctx));
-        //walls.forEach(e => e.draw(ctx));
-        
-        ctx.fillStyle = 'white';
-        flying_figure.proc(elapsed);
-        flying_figure.draw(ctx);
-
-
-        /*
+      const canvas = new px.Canvas();
+      
+      canvas.render_fast((ctx, elapsed) => {
+        // proc
         if (kb.left) pixel.accelerate(-1);
         if (kb.right) pixel.accelerate(+1);
         if (kb.jump) pixel.jump();
         pixel.proc(elapsed);
-        pixel.draw(ctx);
-        
-        
         const crazy_key = crazy_get_key();
         if (crazy_key === 'left') crazy.accelerate(-1);
         if (crazy_key === 'right') crazy.accelerate(+1);
         if (crazy_key === 'jump') crazy.jump();
         crazy.proc(elapsed);
+        // draw
+        pixel.draw(ctx);
         crazy.draw(ctx);
-        
+      });
 
-        //box.rotate(elapsed);
+      canvas.render_slow((ctx, elapsed) => {
+        // proc
+        flying_figure.proc(elapsed);
+        box.rotate(elapsed);
+        // draw
+        platforms.forEach(e => e.draw(ctx));
+        walls.forEach(e => e.draw(ctx));
+        golem_city.draw(ctx);
+        ctx.fillStyle = 'white';
+        flying_figure.draw(ctx);
         box.draw(ctx);
+        ctx.fillStyle = 'white';
+        px.utils.text.print(ctx, `${canvas.get_fps()}`, 5, 5);
+        px.utils.text.print(ctx, 'Привет, мой воздушный мир,\nсотканный из приключений.', 30, 10);
+      });
 
-        px.utils.text.print(ctx, 'Let me out!', 252, 30);
-        //px.utils.text.print(ctx, 'Привет, мой воздушный мир,\nсотканный из приключений.', 10, 80);
-        //px.utils.text.test(ctx);
-        */
+      canvas.exec();
+
+      let fps = 0; /*
+      let elapsed_time = 0;
+      let old_time = 0;
+      (function render(time) {
+        elapsed_time += time - old_time | 0;
+        old_time = time;
+        fps = 1000 / elapsed_time | 0;
+        if (elapsed_time >= 15) {
+          elapsed_time = 0;
+          const elapsed = 20;
+
+          ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+ 
+          
+          
+          
+
+          
+
+          px.utils.text.print(ctx, ''+time, 252, 30);
+          //px.utils.text.print(ctx, 'Привет, мой воздушный мир,\nсотканный из приключений.', 10, 80);
+          //px.utils.text.test(ctx);
+          
+
+          if (kb.left) pixel.accelerate(-1);
+          if (kb.right) pixel.accelerate(+1);
+          if (kb.jump) pixel.jump();
+          pixel.proc(elapsed);
+          pixel.draw(ctx);
+
+          
+        }
+        window.requestAnimationFrame(render);
+      })();
+      */
+
+      /*
+      // render slow
+      setInterval(() => {
+        const ctx = ctx_slow;
+        const cvs = cvs_slow;
+        const elapsed = 500;
+
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, cvs.width, cvs.height);
+
+        platforms.forEach(e => e.draw(ctx));
+        walls.forEach(e => e.draw(ctx));
+        
+        golem_city.draw(ctx);
+        
+        ctx.fillStyle = 'white';
+        flying_figure.proc(elapsed);
+        flying_figure.draw(ctx);
+
+        box.rotate(elapsed);
+        box.draw(ctx);
 
         ctx.fillStyle = 'white';
         px.utils.text.print(ctx, `${fps}`, 5, 5);
 
-        window.requestAnimationFrame(render);
-      })();
+      }, 500);
+      */
     }
 
     //create a synth and connect it to the master output (your speakers)

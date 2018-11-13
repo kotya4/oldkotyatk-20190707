@@ -3,7 +3,7 @@ if (typeof(px) === 'undefined') var px = {};
 
 (function utils(parent) {
   // creates class arguments parser
-  this.create_argument_parser = function(class_name, args) {
+  this.create_argument_parser = function(class_name, args = {}) {
     return function(key, def) {
       if (key in args) return args[key];
       else if (undefined !== def) return def;
