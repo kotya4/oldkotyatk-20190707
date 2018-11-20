@@ -3,16 +3,19 @@ from tornado.web import RequestHandler, Application, StaticFileHandler
 from tornado.ioloop import IOLoop, PeriodicCallback
 import time, sys, os
 import zaripova
-
+import matrices
 
 zaripova.init()
-
 
 class Tetracube(RequestHandler):
     """ Handles tetra.html """
     
     def get(self):
-        self.render('templates/tetra.html')
+        path = '_templates/tetra.html'
+        with open(path, 'r') as f:
+            self.write(f.read())
+            f.close()
+        #self.render('_templates/tetra.html')
 
 
 class ZaripovaHandler(RequestHandler):
@@ -26,14 +29,14 @@ class ZaripovaHandler(RequestHandler):
             text = zaripova.gen(page + 4)
         except (ValueError, TypeError) as e:
             page = 'intro'
-        self.render('templates/zaripova.html', header=text['header'], body=text['body'], page=page)
+        self.render('_templates/zaripova.html', header=text['header'], body=text['body'], page=page)
 
 
 class IndexHandler(RequestHandler):
     """ Handles index.html """
     
     def get(self):
-        self.render('templates/index.html')
+        self.render('_templates/index.html')
 
 
 # activates newrelic if exists
@@ -62,9 +65,11 @@ def main():
         (r'/', IndexHandler),
         (r'/zaripova', ZaripovaHandler),
         (r'/tetra', Tetracube),
-        (r'/(.*)', StaticFileHandler, {'path': 'templates'}),
+        (r'/matrices', matrices.Handler),
+        (r'/(.*)', StaticFileHandler, {'path': '_templates'}),
     ],
-        autoreload=True
+        autoreload=True,
+        debug=True
     )
     app.listen(port)
     # starts periodic callack with 1000ms delay

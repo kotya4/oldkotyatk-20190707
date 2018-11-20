@@ -1,0 +1,77 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="matrices_www/css/index.css">
+  <title>matrices</title>
+  <script>
+    // defines server-client constants
+    const RIGHT_MATRIX_RAW = `{% if matrices['status'] %} {{ matrices['multiplication'] }} {% else %} null {% end %}`;
+  </script>
+  <script src="matrices_www/js/index.js"></script>
+</head>
+<body>
+  <div class="err-msg">
+    ** {{ matrices['err_msg'] }} **
+  </div>
+  <!-- get-request form -->
+  <div class="choice-interface">
+    <form method="get">
+      columns: <input type="number" id="columns" name="columns" value="2"><br>
+      rows: <input type="number" id="rows" name="rows" value="3"><br>
+      <input type="radio" name="answer_type" value="0" checked> blind<br>
+      <input type="radio" name="answer_type" value="1"> with hint<br>
+      <input type="radio" name="answer_type" value="2"> with answer<br>
+      <input type="submit" value="create matrix">
+    </form>
+  </div>
+  <!-- appears when server answers to us -->
+{% if matrices['status'] %}
+  <div class="matrices">
+    <!-- prints first matrix from server -->
+    <div>
+    {% for row in matrices['first'] %}
+      {{ row }}
+      <br>
+    {% end %}
+    </div>
+    <div>
+      X
+    </div>
+    <!-- prints second matrix from server -->
+    <div>
+    {% for row in matrices['second'] %}
+      {{ row }}
+      <br>
+    {% end %}
+    </div>
+    <div>
+      =
+    </div>
+    <!-- prints inputs to manually resolve multiplication of recieved matrices -->
+    <div>
+      <table>
+      {% for y, row in enumerate(matrices['multiplication']) %}
+        <tr>
+          <td>[</td>
+        {% for x, e in enumerate(row) %}
+          <td>
+          <!-- according on type of answer we choose in get-form, matrix would be not be shown, showed or all printed. -->
+          {% if matrices['answer_type'] == 0 %}
+            <input type="number" id="mat-{{y}}-{{x}}" class="values">
+          {% elif matrices['answer_type'] == 1 %}
+            <input type="number" id="mat-{{y}}-{{x}}" class="values" placeholder="{{e}}">
+          {% else %}
+            <input type="number" id="mat-{{y}}-{{x}}" class="values" placeholder="{{e}}" value="{{e}}">
+          {% end %}
+          </td>
+        {% end %}
+          <td>]</td>
+        </tr>
+      {% end %}
+      </table>
+    </div>
+  </div>
+  <!-- resolution checking on this button (see 'check(...)' in 'index.js') -->
+  <button id="checkout">checkout</button>
+{% end %}
+</body>
+</html>

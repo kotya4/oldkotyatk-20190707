@@ -1,0 +1,13 @@
+
+.err-msg {
+  color: red;
+}
+
+.matrices {
+  display: flex;
+  align-items: center;
+}
+
+.values {
+  width: 40px;
+}
