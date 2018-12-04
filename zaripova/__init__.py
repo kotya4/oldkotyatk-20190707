@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import json, random, os
+from tornado.web import RequestHandler
 
 
 MODULE_PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
@@ -213,6 +214,23 @@ def gen(seed):
     return { 'header': header, 'body': text }
 
 
+init()
+
+
+class Handler(RequestHandler):
+    """ Handles zaripova.html """
+    def get(self):
+        path = '../_templates/zaripova_www/index.html'
+        text = { 'header': '', 'body': '' }
+        page = self.get_argument('page', '1')
+        try:
+            page = int(page)
+            text = gen(page + 4)
+        except (ValueError, TypeError) as e:
+            page = 'intro'
+        self.render(path, header=text['header'], body=text['body'], page=page)
+
+
+
 if '__main__' == __name__:
-    if init():
-        print(gen(random.randint(0, 0xffff)))
+    print(gen(random.randint(0, 0xffff)))

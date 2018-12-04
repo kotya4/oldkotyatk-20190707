@@ -1,43 +1,11 @@
 #!/usr/bin/python3
-from tornado.web import RequestHandler, Application, StaticFileHandler
+from tornado.web import Application, StaticFileHandler
 from tornado.ioloop import IOLoop, PeriodicCallback
-import time, sys, os
+import time, os
 import zaripova
 import matrices
-
-zaripova.init()
-
-class Tetracube(RequestHandler):
-    """ Handles tetra.html """
-    
-    def get(self):
-        path = '_templates/tetra.html'
-        with open(path, 'r') as f:
-            self.write(f.read())
-            f.close()
-        #self.render('_templates/tetra.html')
-
-
-class ZaripovaHandler(RequestHandler):
-    """ Handles zaripova.html """
-    
-    def get(self):
-        text = { 'header': '', 'body': '' }
-        page = self.get_argument('page', None)
-        try:
-            page = int(page)
-            text = zaripova.gen(page + 4)
-        except (ValueError, TypeError) as e:
-            page = 'intro'
-        self.render('_templates/zaripova.html', header=text['header'], body=text['body'], page=page)
-
-
-class IndexHandler(RequestHandler):
-    """ Handles index.html """
-    
-    def get(self):
-        self.render('_templates/index.html')
-
+import tetra
+import index
 
 # activates newrelic if exists
 try:
@@ -49,22 +17,19 @@ try:
 except ImportError:
     pass
 
-
 # executes every second
 def periodic_func():
-    #print('A')
-    #tbot.run()
     pass
 
 
-def main():
+if '__main__' == __name__:
     # starts the server
     port = int(os.environ.get('PORT', 5000))
     print('Server runs on port %s' % port)
     app = Application([
-        (r'/', IndexHandler),
-        (r'/zaripova', ZaripovaHandler),
-        (r'/tetra', Tetracube),
+        (r'/', index.Handler),
+        (r'/zaripova', zaripova.Handler),
+        (r'/tetra', tetra.Handler),
         (r'/matrices', matrices.Handler),
         (r'/(.*)', StaticFileHandler, {'path': '_templates'}),
     ],
@@ -83,7 +48,3 @@ def main():
     IOLoop.instance().stop()
     print('Server shutted down')
     time.sleep(1)
-
-
-if '__main__' == __name__:
-    main()

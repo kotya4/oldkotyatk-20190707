@@ -3,29 +3,37 @@
   <link rel="stylesheet" type="text/css" href="matrices_www/css/index.css">
   <title>matrices</title>
   <script>
+    // здесь хранится строка с матрицей - ответом. она превращается в настоящий js-массив в функции onload в index.js
     // defines server-client constants
     const RIGHT_MATRIX_RAW = `{% if matrices['status'] %} {{ matrices['multiplication'] }} {% else %} null {% end %}`;
   </script>
   <script src="matrices_www/js/index.js"></script>
 </head>
 <body>
+  <!-- этот контейнер содержит текст ошибки сервера (при инициализации ошибка, потому что не переданы данные) -->
   <div class="err-msg">
     ** {{ matrices['err_msg'] }} **
   </div>
+  <!-- контейнер с интерфейсом (кнопки, инпуты, радиобатоны) -->
   <!-- get-request form -->
   <div class="choice-interface">
     <form method="get">
-      columns: <input type="number" id="columns" name="columns" value="2"><br>
-      rows: <input type="number" id="rows" name="rows" value="3"><br>
-      <input type="radio" name="answer_type" value="0" checked> blind<br>
-      <input type="radio" name="answer_type" value="1"> with hint<br>
-      <input type="radio" name="answer_type" value="2"> with answer<br>
-      <input type="submit" value="create matrix">
+    <table>
+    <tr><td>строки:      </td><td><input type="number"   name="rows"        value="3"        ></td></tr>
+    <tr><td>столбцы:     </td><td><input type="number"   name="columns"     value="2"        ></td></tr>
+    <tr><td>с ответом    </td><td><input type="radio"    name="answer_type" value="2" checked></td></tr>
+    <tr><td>без ответа   </td><td><input type="radio"    name="answer_type" value="0"        ></td></tr>
+    <tr><td>с подсказкой </td><td><input type="radio"    name="answer_type" value="1"        ></td></tr>
+    <tr><td>единичная    </td><td><input type="checkbox" name="is_identity" value="1"        ></td></tr>
+    </table>
+    <input type="submit" value="Сгенерировать">
     </form>
   </div>
+  <!-- контейнер содержит сгенерированные матрицы и показывается только когда ошибок нет -->
   <!-- appears when server answers to us -->
 {% if matrices['status'] %}
   <div class="matrices">
+    <!-- выводит первую матрицу -->
     <!-- prints first matrix from server -->
     <div>
     {% for row in matrices['first'] %}
@@ -36,6 +44,7 @@
     <div>
       X
     </div>
+    <!-- выводит вторую матрицу -->
     <!-- prints second matrix from server -->
     <div>
     {% for row in matrices['second'] %}
@@ -46,6 +55,7 @@
     <div>
       =
     </div>
+    <!-- выводит инпуты для ручного ввода данных -->
     <!-- prints inputs to manually resolve multiplication of recieved matrices -->
     <div>
       <table>
@@ -54,6 +64,7 @@
           <td>[</td>
         {% for x, e in enumerate(row) %}
           <td>
+          <!-- основываясь на типе выбранного вывода показывается или не показывается ответ -->
           <!-- according on type of answer we choose in get-form, matrix would be not be shown, showed or all printed. -->
           {% if matrices['answer_type'] == 0 %}
             <input type="number" id="mat-{{y}}-{{x}}" class="values">
@@ -70,8 +81,9 @@
       </table>
     </div>
   </div>
+  <!-- проверка ответа на кнопку (см. ф. 'check(...)' в 'index.js') -->
   <!-- resolution checking on this button (see 'check(...)' in 'index.js') -->
-  <button id="checkout">checkout</button>
+  <button id="checkout">Проверить</button>
 {% end %}
 </body>
 </html>
