@@ -2,10 +2,11 @@
 from tornado.web import Application, StaticFileHandler
 from tornado.ioloop import IOLoop, PeriodicCallback
 import time, os
-import zaripova
-import matrices
-import tetra
 import index
+import zaripova
+import tetra
+import matrices
+import cats_falling
 
 # activates newrelic if exists
 try:
@@ -31,6 +32,7 @@ if '__main__' == __name__:
         (r'/zaripova', zaripova.Handler),
         (r'/tetra', tetra.Handler),
         (r'/matrices', matrices.Handler),
+        (r'/cats-falling', cats_falling.Handler),
         (r'/(.*)', StaticFileHandler, {'path': '_templates'}),
     ],
         autoreload=True,

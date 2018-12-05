@@ -1,0 +1,51 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+    echo -e "No arguments supplied"
+    exit
+fi
+
+proj="$1"
+src=$proj"_www"
+proj_dir="../$proj"
+py_dir=${proj//-/_}
+
+if [ ! -d $proj_dir ]; then
+    echo -e "Project \033[1;31m${proj}\033[0m does not exists"
+    exit
+fi
+
+if [ ! -d "${proj_dir}/${src}" ]; then
+    echo -e "Project \033[1;31m${proj}\033[0m has no \033[1;31m${src}\033[0m directory"
+    exit
+fi
+
+function create_template
+{
+    cp -r "${proj_dir}/${src}" "_templates/"
+    cp -r "${proj_dir}/." "_templates/${src}/"
+    rm -r "_templates/${src}/${src}"
+    echo -e "Template for \033[1;32m${proj}\033[0m ${1}.\n"\
+" Do not forget to add \033[1;32mimport ${proj}\033[0m and \033[1;32m${proj}.Handler\033[0m in server code :3"
+}
+
+if [ -d $py_dir ]; then
+    read -r -p "Project \033[1;34m${proj}\033[0m already exists, replace templates? [y/N] " response
+    response=${response,,} # tolower
+    if [[ "$response" =~ ^(yes|y)$ ]]; then
+        create_template "updated"
+    fi
+else
+    mkdir -p $py_dir
+    py="#!/usr/bin/env python3\n"\
+"from tornado.web import RequestHandler\n\n"\
+"class Handler(RequestHandler):\n"\
+"\t\"\"\" heroku RequestHandler for '${proj}' \"\"\"\n"\
+"\tdef get(self):\n"\
+"\t\tpath = '../_templates/${src}/index.html'\n"\
+"\t\tself.render(path)\n"
+    echo -e $py > $py_dir"/__init__.py"
+    create_template "created"
+fi
+
+exit
