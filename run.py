@@ -7,6 +7,7 @@ import zaripova
 import tetra
 import matrices
 import cats_falling
+import wav
 
 # activates newrelic if exists
 try:
@@ -33,6 +34,8 @@ if '__main__' == __name__:
         (r'/tetra', tetra.Handler),
         (r'/matrices', matrices.Handler),
         (r'/cats-falling', cats_falling.Handler),
+        (r'/wav', wav.Handler),
+
         (r'/(.*)', StaticFileHandler, {'path': '_templates'}),
     ],
         autoreload=True,
