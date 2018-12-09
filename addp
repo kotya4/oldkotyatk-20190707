@@ -30,7 +30,8 @@ function create_template
 }
 
 if [ -d $py_dir ]; then
-    read -r -p "Project \033[1;34m${proj}\033[0m already exists, replace templates? [y/N] " response
+    echo -e "Project \033[1;34m${proj}\033[0m already exists, replace templates? [y/N] "
+    read -r -p "" response
     response=${response,,} # tolower
     if [[ "$response" =~ ^(yes|y)$ ]]; then
         create_template "updated"

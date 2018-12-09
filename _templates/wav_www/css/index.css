@@ -98,10 +98,12 @@ a {
 }
 
 .textarea .textarea-editable.text {
-  -webkit-text-fill-color: transparent;
+  #-webkit-text-fill-color: transparent;
 }
 
 .textarea .textarea-highlight {
+  opacity: 0;
+
   pointer-events: none;
   position: absolute;
   left: 0;
