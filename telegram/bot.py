@@ -30,7 +30,8 @@ class BotHandler:
         return update
         
 
-token = '646357441:AAGOwonTs3T9fZfN8KxCE22FMxtA-bWYhPI'
+print('see SECURE_apikey')
+token = ''
 bot = BotHandler(token)
 
 
