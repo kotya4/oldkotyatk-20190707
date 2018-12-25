@@ -1,3 +1,12 @@
 #!/bin/bash
-git ls-files --others -i --exclude-standard | grep "SECURE_*" | xargs git add -f 
-git status
+#git ls-files --others -i --exclude-standard | grep "SECURE_*" | xargs git add -f 
+#git status
+
+git add .
+git ls-files | grep "SECURE_*" | xargs git rm --cached
+git commit -m "$1"
+git push origin master
+
+git add .
+git commit -m "$1"
+git push heroku master
