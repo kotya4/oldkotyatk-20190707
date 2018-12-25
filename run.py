@@ -16,6 +16,7 @@ try:
     @newrelic.agent.function_trace()
     def my_coroutine():
         yield tornado.gen.sleep(0)
+    print('!!! -- YO -- !!!')
 except ImportError:
     pass
 
