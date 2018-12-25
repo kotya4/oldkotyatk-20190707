@@ -220,7 +220,7 @@ init()
 class Handler(RequestHandler):
     """ Handles zaripova.html """
     def get(self):
-        path = '../_templates/zaripova_www/index.html'
+        path = '../_templates/www_zaripova/index.html'
         text = { 'header': '', 'body': '' }
         page = self.get_argument('page', '1')
         try:

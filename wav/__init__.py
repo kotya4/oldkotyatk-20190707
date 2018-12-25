@@ -4,6 +4,6 @@ from tornado.web import RequestHandler
 class Handler(RequestHandler):
 	""" heroku RequestHandler for 'wav' """
 	def get(self):
-		path = '../_templates/wav_www/index.html'
+		path = '../_templates/www_wav/index.html'
 		self.render(path)
 

@@ -21,7 +21,7 @@ class Handler(RequestHandler):
     # обработчик get-запросов
     def get(self):
         # путь до шаблона страницы
-        path = '../_templates/matrices_www/index.html'
+        path = '../_templates/www_matrices/index.html'
         # сохраняем значения, переданные в get-запросе
         # parses arguments
         rows = self.get_argument('rows', None)
