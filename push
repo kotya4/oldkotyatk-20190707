@@ -1,6 +1,10 @@
 #!/bin/bash
 #git ls-files --others -i --exclude-standard | grep "SECURE_*" | xargs git add -f 
-#git status
+
+if [ $# -eq 0 ]; then
+    echo -e "Commit message must be supplied"
+    exit
+fi
 
 git add .
 git ls-files | grep "SECURE_*" | xargs git rm --cached
