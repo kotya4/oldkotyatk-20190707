@@ -1,13 +1,13 @@
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="matrices_www/css/index.css">
+  <link rel="stylesheet" type="text/css" href="www_matrices/css/index.css">
   <title>matrices</title>
   <script>
     // здесь хранится строка с матрицей - ответом. она превращается в настоящий js-массив в функции onload в index.js
     // defines server-client constants
     const RIGHT_MATRIX_RAW = `{% if matrices['status'] %} {{ matrices['multiplication'] }} {% else %} null {% end %}`;
   </script>
-  <script src="matrices_www/js/index.js"></script>
+  <script src="www_matrices/js/index.js"></script>
 </head>
 <body>
   <!-- этот контейнер содержит текст ошибки сервера (при инициализации ошибка, потому что не переданы данные) -->

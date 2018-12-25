@@ -6,7 +6,7 @@ if [ $# -eq 0 ]; then
 fi
 
 proj="$1"
-src=$proj"_www"
+src="www_$proj"
 proj_dir="../$proj"
 py_dir=${proj//-/_}
 
@@ -26,7 +26,7 @@ function create_template
     cp -r "${proj_dir}/." "_templates/${src}/"
     rm -r "_templates/${src}/${src}"
     echo -e "Template for \033[1;32m${proj}\033[0m ${1}.\n"\
-"Do not forget to add \033[1;32mimport ${proj}\033[0m and \033[1;32m${proj}.Handler\033[0m in server code :3"
+"!!! Do not forget to add \033[1;32mimport ${proj}\033[0m and \033[1;32m${proj}.Handler\033[0m in server code."
 }
 
 if [ -d $py_dir ]; then
@@ -45,7 +45,7 @@ else
 "\tdef get(self):\n"\
 "\t\tpath = '../_templates/${src}/index.html'\n"\
 "\t\tself.render(path)\n"
-    echo -e $py > $py_dir"/__init__.py"
+    echo -e $py > "$py_dir/__init__.py"
     create_template "created"
 fi
 
