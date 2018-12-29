@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 from tornado.web import Application, StaticFileHandler
 from tornado.ioloop import IOLoop, PeriodicCallback
 import time, os
@@ -8,6 +8,7 @@ import tetra
 import matrices
 import cats_falling
 import wav
+import perlin_surface
 
 # activates newrelic if exists
 try:
@@ -16,7 +17,6 @@ try:
     @newrelic.agent.function_trace()
     def my_coroutine():
         yield tornado.gen.sleep(0)
-    print('!!! -- YO -- !!!')
 except ImportError:
     pass
 
@@ -36,7 +36,8 @@ if '__main__' == __name__:
         (r'/matrices', matrices.Handler),
         (r'/cats-falling', cats_falling.Handler),
         (r'/wav', wav.Handler),
-
+        (r'/perlin_surface', perlin_surface.Handler),
+        
         (r'/(.*)', StaticFileHandler, {'path': '_templates'}),
     ],
         autoreload=True,
