@@ -9,6 +9,7 @@ import matrices
 import cats_falling
 import wav
 import perlin_surface
+import polar
 
 # activates newrelic if exists
 try:
@@ -37,6 +38,7 @@ if '__main__' == __name__:
         (r'/cats-falling', cats_falling.Handler),
         (r'/wav', wav.Handler),
         (r'/perlin_surface', perlin_surface.Handler),
+        (r'/polar', polar.Handler),
         
         (r'/(.*)', StaticFileHandler, {'path': '_templates'}),
     ],
