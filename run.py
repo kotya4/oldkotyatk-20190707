@@ -10,6 +10,7 @@ import cats_falling
 import wav
 import perlin_surface
 import polar
+import maze
 
 # activates newrelic if exists
 try:
@@ -39,6 +40,7 @@ if '__main__' == __name__:
         (r'/wav', wav.Handler),
         (r'/perlin_surface', perlin_surface.Handler),
         (r'/polar', polar.Handler),
+	(r'/maze', maze.Handler),
         
         (r'/(.*)', StaticFileHandler, {'path': '_templates'}),
     ],
