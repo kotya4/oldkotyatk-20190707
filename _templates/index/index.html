@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" type="text/css" href="index/css/logo.css">
+    <link rel="stylesheet" type="text/css" href="index/css/index.css">
+    <title>Main Page -- kotya.tk</title>
+    <script src="index/js/index.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="logo-body"></div>
+      <div class="logo-bowtie">⋈</div>
+      <div class="logo-text">
+        <pre>
+ _         _                _   _
+| |       | |              | | | |
+| | _____ | |_ _   _  __ _ | |_| | __
+| |/ / _ \| __| | | |/ _` || __| |/ /
+|   < (_) | |_| |_| | (_| || |_|   <
+|_|\_\___/ \__|\__, |\__,_(_)__|_|\_\
+                __/ |
+               |___/
+        </pre>
+      </div>
+      <div class="logo-text logo-small-text">KOTYA.TK</div>
+      <div class="logo-cat"></div>
+      <div class="logo-info">
+        <a href="https://vk.com/piturd98">Sluchaynaya Kotya</a> (c)<br>Created: Aug 2018<br>Last update: {{ uptime }}
+      </div>
+      <div class="content">
+        {% for proj in projs %}
+          <div class="proj">
+            <div><a href="{{ proj['path'] }}">{{ proj['path'] }}</a></div>
+            <div class="proj-disc">{{ proj['disc'] }}</div>
+          </div>
+        {% end %}
+      </div>
+    </div>
+  </body>
+</html>

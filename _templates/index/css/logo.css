@@ -1,0 +1,50 @@
+
+.logo-body {
+  border-bottom: 1px dashed #e8e8e8;
+  position: absolute;
+  z-index: 11;
+  width: 100%;
+  left: 0;
+  top: 135px;
+}
+
+.logo-text {
+  background-color: inherit;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+.logo-small-text {
+  display: none;
+  left: 13px;
+  top: 30px;
+}
+
+.logo-cat {
+  background-color: inherit;
+  text-align: right;
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  top: 0;
+
+}
+
+.logo-info {
+  text-align: right;
+  position: absolute;
+  display: none;
+  z-index: -2;
+  right: 10px;
+  top: 50px;
+}
+
+.logo-bowtie {
+  font-size: 16px;
+  position: absolute;
+  z-index: 10;
+  color: hotpink;
+  left: 12px;
+  top: 13px;
+}

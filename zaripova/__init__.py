@@ -9,7 +9,7 @@ MODULE_PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
 
 class MarkovChain:
     """ Generates random text """
-    
+
     def __init__(self, seq_len = 1):
         self.seq_len = seq_len
 
@@ -218,6 +218,11 @@ init()
 
 
 class Handler(RequestHandler):
+    """ Returns discription """
+    @staticmethod
+    def get_disc():
+        return 'описания нет, но вы держитесь'
+
     """ Handles zaripova.html """
     def get(self):
         path = '../_templates/www_zaripova/index.html'
