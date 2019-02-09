@@ -3,7 +3,7 @@ window.addEventListener('load', () => {
     return [...Array(count)].map((e,i) => {
       const cat = document.createElement('div');
       cat.className = 'cat';
-      cat.style.backgroundImage = `url(www_cats-falling/img/${i + 1}.png)`
+      cat.style.backgroundImage = `url(www_cats_falling/img/${i + 1}.png)`
       wrapper.appendChild(cat);
       let w = wrapper.offsetWidth;
       let h = wrapper.offsetHeight;

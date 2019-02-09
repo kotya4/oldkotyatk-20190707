@@ -2,6 +2,11 @@
 from tornado.web import Application, StaticFileHandler, RequestHandler
 from tornado.ioloop import IOLoop, PeriodicCallback
 import time, os, datetime
+import emojies
+
+
+""" Some handlers includes """
+
 
 import zaripova
 import tetra
@@ -12,35 +17,68 @@ import perlin_surface
 import polar
 import maze
 
+
+""" Some functions """
+
+
+# executes every second
+def periodic_func():
+    pass
+
+
+# loads README.md from handler
+def load_readme_from(handler):
+    try:
+        with open(handler[0][1:] + '/README.md', 'r') as f:
+            raw = f.read()
+            s = raw.find('#')           # start
+            m = raw.find('\n', 1 + s)   # middle
+            e = raw.find('#', m)        # end
+            content = raw[m:e].replace('\n', ' ')
+    except EnvironmentError:
+        content = ' ' + emojies.get_one()
+    return content
+
+
+# gets discriptions for all handlers
+def collect_information_about(handlers):
+    projects = []
+    for handler in handlers:
+        path = handler[0]
+        disc = load_readme_from(handler)
+        projects.append({ 'path': path, 'disc': disc })
+    return projects
+
+
+""" Some constants """
+
+
+UPTIME_STR = 'Feb 2019' #datetime.datetime.now().strftime('%b %Y')
+
 HANDLERS = [
     (r'/zaripova', zaripova.Handler),
     (r'/tetra', tetra.Handler),
     (r'/matrices', matrices.Handler),
-    (r'/cats-falling', cats_falling.Handler),
+    (r'/cats_falling', cats_falling.Handler),
     (r'/wav', wav.Handler),
     (r'/perlin_surface', perlin_surface.Handler),
     (r'/polar', polar.Handler),
     (r'/maze', maze.Handler),
 ]
 
-UPTIME_STR = datetime.datetime.now().strftime('%b %Y')
+PROJECTS = collect_information_about(HANDLERS)
+
+
+""" Some IndexHandlers """
 
 
 class IndexHandler(RequestHandler):
-    """ Loads information about all handlers """
-    def initialize(self, handlers):
-        self.projs = []
-        for o in handlers:
-            path = o[0]
-            handler = o[1]
-            try:
-                disc = handler.get_disc()
-            except AttributeError:
-                disc = 'ОПИСАНИЕ ОТСУТСТВУЕТ'
-            self.projs.append({ 'path': path, 'disc': disc })
     """ Draws index.html template """
     def get(self):
-        self.render('_templates/index/index.html', projs=self.projs, uptime=UPTIME_STR)
+        self.render('_templates/index/index.html', projects=PROJECTS, uptime=UPTIME_STR)
+
+
+""" Some newrelic activators """
 
 
 # activates newrelic if exists
@@ -53,20 +91,21 @@ try:
 except ImportError:
     pass
 
-# executes every second
-def periodic_func():
-    pass
+
+""" Some mains """
 
 
 if '__main__' == __name__:
+
     # starts the server
     port = int(os.environ.get('PORT', 5000))
     print('Server runs on port %s' % port)
     app = Application(HANDLERS + [
-        (r'/', IndexHandler, { 'handlers': HANDLERS }),
+        (r'/', IndexHandler),
         (r'/(.*)', StaticFileHandler, {'path': '_templates'}),
     ], autoreload=True, debug=True)
     app.listen(port)
+
     # starts periodic callack with 1000ms delay
     callback = PeriodicCallback(periodic_func, 1000)
     try:
@@ -74,8 +113,8 @@ if '__main__' == __name__:
         IOLoop.instance().start()
     except KeyboardInterrupt:
         pass
+
     # stops server
     IOLoop.instance().stop()
     print('Server shutted down')
     time.sleep(1)
-

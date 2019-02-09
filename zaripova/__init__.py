@@ -218,11 +218,6 @@ init()
 
 
 class Handler(RequestHandler):
-    """ Returns discription """
-    @staticmethod
-    def get_disc():
-        return 'описания нет, но вы держитесь'
-
     """ Handles zaripova.html """
     def get(self):
         path = '../_templates/www_zaripova/index.html'
