@@ -16,6 +16,7 @@ import wav
 import perlin_surface
 import polar
 import maze
+import walls
 
 
 """ Some functions """
@@ -56,14 +57,15 @@ def collect_information_about(handlers):
 UPTIME_STR = 'Feb 2019' #datetime.datetime.now().strftime('%b %Y')
 
 HANDLERS = [
+    (r'/walls', walls.Handler),
+    (r'/perlin_surface', perlin_surface.Handler),
+    (r'/maze', maze.Handler),
+    (r'/polar', polar.Handler),
+    (r'/wav', wav.Handler),
     (r'/zaripova', zaripova.Handler),
     (r'/tetra', tetra.Handler),
     (r'/matrices', matrices.Handler),
     (r'/cats_falling', cats_falling.Handler),
-    (r'/wav', wav.Handler),
-    (r'/perlin_surface', perlin_surface.Handler),
-    (r'/polar', polar.Handler),
-    (r'/maze', maze.Handler),
 ]
 
 PROJECTS = collect_information_about(HANDLERS)
