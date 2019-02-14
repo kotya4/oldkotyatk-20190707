@@ -17,6 +17,7 @@ import perlin_surface
 import polar
 import maze
 import walls
+import valentine
 
 
 """ Some functions """
@@ -63,6 +64,7 @@ HANDLERS = [
     (r'/polar', polar.Handler),
     (r'/wav', wav.Handler),
     (r'/zaripova', zaripova.Handler),
+    (r'/valentine', valentine.Handler),
     (r'/tetra', tetra.Handler),
     (r'/matrices', matrices.Handler),
     (r'/cats_falling', cats_falling.Handler),
