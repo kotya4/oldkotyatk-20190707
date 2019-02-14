@@ -5,21 +5,21 @@ function onload() {
     cvs = document.createElement('canvas');
     document.body.appendChild(cvs);
   }
-  cvs.width = 400;
-  cvs.height = 300;
+  cvs.width = 800;
+  cvs.height = 600;
   const ctx = cvs.getContext('2d');
 
-  const offset_x = 200;
-  const offset_y = 150;
-  const radius = 75;
+  const offset_x = cvs.width / 2;
+  const offset_y = cvs.height / 2;
+  const radius = 200;
 
-  const stroke_codrioid = (points_number) => {
+  const stroke_codrioid = (points_number, factor, angle) => {
     ctx.save();
     ctx.translate(offset_x, offset_y);
 
     const points = [...Array(points_number)].map((_, i) => [
-      Math.sin(2 * Math.PI / points_number * i) * radius,
-      Math.cos(2 * Math.PI / points_number * i) * radius,
+      Math.sin(2 * Math.PI / points_number * i + angle) * radius,
+      Math.cos(2 * Math.PI / points_number * i + angle) * radius,
     ]);
 
     ctx.beginPath();
@@ -28,7 +28,7 @@ function onload() {
 
     for (let i = 2; i < points_number - 1; ++i) {
       ctx.moveTo(...points[i % points_number]);
-      ctx.lineTo(...points[(i * 2) % points_number]);
+      ctx.lineTo(...points[~~(i * factor) % points_number]);
     }
 
     ctx.stroke();
@@ -37,13 +37,24 @@ function onload() {
 
   ctx.fillStyle = 'black';
   ctx.strokeStyle = 'white';
+  ctx.font = '24px Courier New';
 
-  let points_number = 1;
+  let points_number = 3;
+  let factor = 2;
+  let angle = 0;
+  let dangle = 0;
   setInterval(() => {
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    stroke_codrioid(++points_number);
-    ctx.strokeText('с днём святого валентина', 140, 250);
-  }, 150);
+    stroke_codrioid(~~points_number, factor, angle);
+    ctx.strokeText('с днём святого валентина', 225, 550);
+    if (points_number < 250) {
+      points_number *= 1.02;
+    } else {
+      factor += 0.03;
+      if (factor > 5 && dangle < 0.05) dangle += 0.001;
+      angle += dangle;
+    }
+  }, 60);
 }
 
 /*
