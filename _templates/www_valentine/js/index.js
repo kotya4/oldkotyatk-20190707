@@ -5,13 +5,19 @@ function onload() {
     cvs = document.createElement('canvas');
     document.body.appendChild(cvs);
   }
-  cvs.width = 800;
-  cvs.height = 600;
+  cvs.width = 700;
+  cvs.height = 500;
   const ctx = cvs.getContext('2d');
 
   const offset_x = cvs.width / 2;
   const offset_y = cvs.height / 2;
   const radius = 200;
+
+  const push_values_in_container = o => {
+    let s = '';
+    for(let key in o) s += '<div class="justify">' + key + ' ' + (~~(o[key] * 100) / 100) + '</div>';
+    document.getElementsByClassName('values')[0].innerHTML = s;
+  }
 
   const stroke_codrioid = (points_number, factor, angle) => {
     ctx.save();
@@ -44,15 +50,20 @@ function onload() {
   let angle = 0;
   let dangle = 0;
   setInterval(() => {
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    push_values_in_container({
+      points_number,
+      factor,
+      angle,
+      dangle
+    });
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     stroke_codrioid(~~points_number, factor, angle);
-    ctx.strokeText('с днём святого валентина', 225, 550);
     if (points_number < 250) {
       points_number *= 1.02;
     } else {
       factor += 0.03;
-      if (factor > 5 && dangle < 0.05) dangle += 0.001;
-      angle += dangle;
+      if (factor > 5) dangle += 0.01;
+      angle += Math.sin(dangle) * 0.1;
     }
   }, 60);
 }
