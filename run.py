@@ -18,6 +18,7 @@ import polar
 import maze
 import walls
 import valentine
+inport neural
 
 
 """ Some functions """
@@ -58,6 +59,7 @@ def collect_information_about(handlers):
 UPTIME_STR = 'Feb 2019' #datetime.datetime.now().strftime('%b %Y')
 
 HANDLERS = [
+    (r'/neural', neural.Handler),
     (r'/walls', walls.Handler),
     (r'/perlin_surface', perlin_surface.Handler),
     (r'/maze', maze.Handler),
