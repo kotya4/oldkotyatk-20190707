@@ -18,7 +18,7 @@ import polar
 import maze
 import walls
 import valentine
-inport neural
+import neural
 
 
 """ Some functions """
