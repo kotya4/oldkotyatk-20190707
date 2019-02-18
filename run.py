@@ -19,6 +19,7 @@ import maze
 import walls
 import valentine
 import neural
+import automat
 
 
 """ Some functions """
@@ -59,6 +60,7 @@ def collect_information_about(handlers):
 UPTIME_STR = 'Feb 2019' #datetime.datetime.now().strftime('%b %Y')
 
 HANDLERS = [
+    (r'/automat', automat.Handler),
     (r'/neural', neural.Handler),
     (r'/walls', walls.Handler),
     (r'/perlin_surface', perlin_surface.Handler),
