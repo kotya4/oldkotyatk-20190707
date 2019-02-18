@@ -1,13 +1,18 @@
 
 function onload() {
+  const wrapper = document.getElementsByClassName('wrapper')[0];
+
   const cvs = document.createElement('canvas');
   cvs.width = 400;
   cvs.height = 400;
-  document.body.appendChild(cvs);
+  wrapper.appendChild(cvs);
   const ctx = cvs.getContext('2d');
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.fillStyle = 'white';
+
+
+
 
   const rw = 3;
   const rh = 3;
@@ -24,8 +29,6 @@ function onload() {
       ctx.fillStyle = [
         'black',
         'white',
-        'blue',
-        'red'
       ][e];
       ctx.fillRect(x * rw, y * rh, rw - ro, rh - ro);
     }
@@ -49,8 +52,16 @@ function onload() {
     return num;
   }
 
-  let min = 2;
-  let max = 3;
+  let c1min = 2;
+  let c1max = 3;
+  let c2min = 4;
+  let c2max = 6;
+  let c1min_alive = 3;
+  let c1max_alive = 55000;
+  let c2min_alive = 1500;
+
+  let min = c1min;
+  let max = c1max;
   let inv = false;
   const swap = () => {
     if (map === buffer1) {
@@ -63,43 +74,95 @@ function onload() {
   }
 
   let num = 0;
-  setInterval(() => {
 
-    num = 0;
+  const start = () => {
+    return setInterval(() => {
+      num = 0;
 
-    for (let x = 0; x < map.length; ++x)
-      for (let y = 0; y < map[0].length; ++y)
-        num += logic(x, y, min, max);
+      for (let x = 0; x < map.length; ++x)
+        for (let y = 0; y < map[0].length; ++y)
+          num += logic(x, y, min, max);
 
-    swap();
+      swap();
 
-    draw_map();
+      draw_map();
 
-    if (num < 3 || num > 55000 && num < 60000) {
-      if (num === 0) {
-        map.forEach((e, x) => e.forEach((_, y) => map[x][y] = Math.random() > 0.1 ? 1 : 0));
-        return;
+      if (num < c1min_alive || num > c1max_alive && num < c1max_alive + 5000) {
+        if (num === 0) {
+          map.forEach((e, x) => e.forEach((_, y) => map[x][y] = Math.random() > 0.1 ? 1 : 0));
+          return;
+        }
+        if (!inv) {
+          min = c2min;
+          max = c2max;
+          inv = true;
+        }
       }
-      if (!inv) {
-        min = 4;
-        max = 6;
-        inv = true;
+
+      if (inv) {
+        if (num < c2min_alive) {
+          min = c1min;
+          max = c1max;
+          inv = false;
+          map.forEach((e, x) => e.forEach((_, y) => map[x][y] = Math.random() > 0.1 ? 1 : 0));
+        }
       }
+
+      info({
+        cycle: inv ? 2 : 1,
+        max: max,
+        min: min,
+        num: num,
+        reset_in_cycle_1_if_less_than: c1min_alive,
+        reset_in_cycle_2_if_less_than: c2min_alive,
+        cycle_2_starts_then_more_than: c1max_alive,
+        '<br><br>created': 'Feb, 2019'
+      });
+
+    }, 100);
+  }
+
+  let interval_id = start();
+
+  function info(o) {
+    let s = '';
+    for (let k in o) {
+      s += k + ': ' + o[k] + '<br>';
     }
+    document.getElementById('info').innerHTML = s;
+  }
 
-    if (inv) {
-      if (num < 1500) {
-        min = 2;
-        max = 3;
-        inv = false;
-        map.forEach((e, x) => e.forEach((_, y) => map[x][y] = Math.random() > 0.1 ? 1 : 0));
-      }
+  function onstart() {
+    if (interval_id == null) interval_id = start();
+  }
+
+  function onstop() {
+    if (interval_id != null) {
+      clearInterval(interval_id);
+      interval_id = null;
     }
+  }
 
+  function onreset() {
+    onstop();
+    map.forEach((e, x) => e.forEach((_, y) => map[x][y] = Math.random() > 0.1 ? 1 : 0));
+    c1min = ~~document.getElementById('min1').value;
+    c1max = ~~document.getElementById('max1').value;
+    c2min = ~~document.getElementById('min2').value;
+    c2max = ~~document.getElementById('max2').value;
+    c1min_alive = ~~document.getElementById('min_alive1').value;
+    c1max_alive = ~~document.getElementById('max_alive1').value;
+    c2min_alive = ~~document.getElementById('min_alive2').value;
+    min = c1min;
+    max = c1max;
+    inv = false;
+    onstart();
+  }
 
-  }, 100);
+  document.getElementById('btn_start').onclick = onstart;
+  document.getElementById('btn_stop').onclick = onstop;
+  document.getElementById('btn_reset').onclick = onreset;
 
-  //setInterval(() => console.log(num), 1000);
 }
 
 /*

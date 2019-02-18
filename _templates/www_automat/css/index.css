@@ -3,12 +3,14 @@ body {
   font-size: 12px;
   background-color: #111;
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 canvas {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  image-rendering: pixelated;
+}
+
+.wrapper {
+  display: flex;
 }
