@@ -72,8 +72,8 @@ function onload() {
   const auto = Automata({
     min: 1,
     max: 3,
-    col: 41,
-    row: 41,
+    col: 201,
+    row: 201,
     //init: [[1,1,0,1,1],[1,0,1,1,1],[1,1,1,0,1],[0,0,1,0,1]]
   });
   const dump = auto.dump();
