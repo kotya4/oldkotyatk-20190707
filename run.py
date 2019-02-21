@@ -61,7 +61,7 @@ def collect_information_about(handlers):
 UPTIME_STR = 'Feb 2019' #datetime.datetime.now().strftime('%b %Y')
 
 HANDLERS = [
-    (r'/automat2', automat.Handler),
+    (r'/automat2', automat2.Handler),
     (r'/automat', automat.Handler),
     (r'/neural', neural.Handler),
     (r'/walls', walls.Handler),
