@@ -21,6 +21,7 @@ import valentine
 import neural
 import automat
 import automat2
+import automata3d
 
 
 """ Some functions """
@@ -61,6 +62,7 @@ def collect_information_about(handlers):
 UPTIME_STR = 'Feb 2019' #datetime.datetime.now().strftime('%b %Y')
 
 HANDLERS = [
+    (r'/automata3d', automata3d.Handler),
     (r'/automat2', automat2.Handler),
     (r'/automat', automat.Handler),
     (r'/neural', neural.Handler),
