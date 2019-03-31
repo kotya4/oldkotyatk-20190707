@@ -23,6 +23,7 @@ import automat
 import automat2
 import automata3d
 import raycaster
+import THREEd
 
 
 """ Some functions """
@@ -63,6 +64,7 @@ def collect_information_about(handlers):
 UPTIME_STR = 'Feb 2019' #datetime.datetime.now().strftime('%b %Y')
 
 HANDLERS = [
+    (r'/3d', THREEd.Handler),
     (r'/raycaster', raycaster.Handler),
     (r'/automata3d', automata3d.Handler),
     (r'/automat2', automat2.Handler),
