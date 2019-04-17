@@ -24,6 +24,7 @@ import automat2
 import automata3d
 import raycaster
 import THREEd
+import vihuhol
 
 
 """ Some functions """
@@ -31,7 +32,10 @@ import THREEd
 
 # executes every second
 def periodic_func():
-    pass
+    try:
+        vihuhol.run()
+    except:
+        pass
 
 
 # loads README.md from handler
@@ -123,7 +127,7 @@ if '__main__' == __name__:
     app.listen(port)
 
     # starts periodic callack with 1000ms delay
-    callback = PeriodicCallback(periodic_func, 1000)
+    callback = PeriodicCallback(periodic_func, 1000 * 60 * 120)
     try:
         callback.start()
         IOLoop.instance().start()
