@@ -2,6 +2,7 @@
 import os
 import json
 import vk_api
+from random import randint
 
 
 MODULE_PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
@@ -9,6 +10,7 @@ MODULE_PATH = os.path.dirname(os.path.realpath(__file__)) + '/'
 
 rules = None
 last_id = None
+
 
 def load_last_id():
     global last_id
@@ -35,6 +37,7 @@ def apply_rules(text):
     global rules
     text = text.lower()
     was_replaced = False
+    how_many = randint(1, 3)
     for rule in rules:
         for key in rule['keys']:
             for i in range(256):
@@ -46,6 +49,9 @@ def apply_rules(text):
                 else:
                     text = text[:index] + rule['replace_with'] + text[index + len(key):]
                     was_replaced = True
+                    how_many -= 1
+                    if not how_many:
+                        return { 'was_replaced': was_replaced, 'text': text }
     return { 'was_replaced': was_replaced, 'text': text }
 
 
