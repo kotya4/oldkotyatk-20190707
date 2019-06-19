@@ -26,6 +26,7 @@ import raycaster
 import THREEd
 import vihuhol
 import cluster_img
+import DI
 
 
 """ Some functions """
@@ -70,6 +71,7 @@ UPTIME_STR = 'Feb 2019' #datetime.datetime.now().strftime('%b %Y')
 
 HANDLERS = [
     (r'/cluster_img', cluster_img.Handler),
+    (r'/DI', DI.Handler),
     (r'/3d', THREEd.Handler),
     (r'/raycaster', raycaster.Handler),
     (r'/automata3d', automata3d.Handler),

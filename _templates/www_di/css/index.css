@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
+
+body {
+
+}
+
+canvas {
+  width: 600px;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+td {
+  background: lightgrey;
+}
+
+.ddata {
+
+}
+
+.ndata {
+  background: lightblue;
+}
