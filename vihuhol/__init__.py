@@ -57,14 +57,14 @@ def apply_rules(text):
 
 def login():
     global vk
-    service_key = 'a860f3e3a860f3e3a860f3e368a80af079aa860a860f3e3f4d524c6c2ed509b781ef160'
+    service_key = ''
     permissions = vk_api.VkUserPermissions.OFFLINE \
                 | vk_api.VkUserPermissions.GROUPS \
                 | vk_api.VkUserPermissions.STATS \
                 | vk_api.VkUserPermissions.WALL
     vk_session = vk_api.VkApi(
-        login='89196442026',
-        password='nastyarizhik2',
+        login='',
+        password='',
         scope=permissions,
         app_id=6947738,
         api_version='5.95',

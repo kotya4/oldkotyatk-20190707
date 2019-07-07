@@ -24,7 +24,7 @@ import automat2
 import automata3d
 import raycaster
 import THREEd
-import vihuhol
+#import vihuhol
 import cluster_img
 import did
 
@@ -35,7 +35,8 @@ import did
 # executes every second
 def periodic_func():
     try:
-        vihuhol.run()
+        pass
+        #vihuhol.run()
     except:
         pass
 
@@ -51,6 +52,8 @@ def load_readme_from(handler):
             content = raw[m:e].replace('\n', ' ')
     except EnvironmentError:
         content = ' ' + emojies.get_one()
+    except UnicodeDecodeError:
+        content = 'UnicodeDecodeError'
     return content
 
 
